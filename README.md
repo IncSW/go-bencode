@@ -1,4 +1,4 @@
-# go-bencode [![Build Status][ci-img]][ci] [![Coverage Status][cov-img]][cov]
+# go-bencode [![Build Status](https://travis-ci.org/IncSW/go-bencode.svg?branch=master)](https://travis-ci.org/IncSW/go-bencode) [![Coverage Status](https://coveralls.io/repos/github/IncSW/go-bencode/badge.svg)](https://coveralls.io/github/IncSW/go-bencode)
 
 ## Installation
 
