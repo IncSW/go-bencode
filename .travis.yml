@@ -5,6 +5,7 @@ go:
   - 1.8
 before_install:
   - go get github.com/mattn/goveralls
+  - go get github.com/stretchr/testify/assert
 go_import_path: github.com/IncSW/go-bencode
 script:
   - make test
