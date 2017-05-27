@@ -1,13 +1,13 @@
 language: go
 sudo: false
 go:
-	- 1.7
-	- 1.8
+  - 1.7
+  - 1.8
 before_install:
-	- go get github.com/mattn/goveralls
+  - go get github.com/mattn/goveralls
 go_import_path: github.com/IncSW/go-bencode
 script:
-	- make test
-	- make bench
+  - make test
+  - make bench
 after_success:
-	- travis_retry make coveralls
+  - travis_retry make coveralls
