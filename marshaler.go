@@ -22,7 +22,47 @@ func marshal(data interface{}, result *[]byte, offset int, length int) (int, int
 
 		return offset, length, nil
 
+	case int32:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case int16:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case int8:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
 	case int:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case uint64:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case uint32:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case uint16:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case uint8:
+		offset, length = marshalInt(int64(value), result, offset, length)
+
+		return offset, length, nil
+
+	case uint:
 		offset, length = marshalInt(int64(value), result, offset, length)
 
 		return offset, length, nil
