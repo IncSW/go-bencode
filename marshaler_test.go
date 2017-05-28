@@ -51,6 +51,11 @@ func TestMarshal(t *testing.T) {
 	if !assert.NoError(err) || !assert.Equal([]byte("d8:announce38:udp://tracker.publicbt.com:80/announce13:announce-listll38:udp://tracker.publicbt.com:80/announceel44:udp://tracker.openbittorrent.com:80/announceeee"), result) {
 		return
 	}
+
+	result, err = Marshal(nil)
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: unsupported type: <nil>", err.Error()) {
+		return
+	}
 }
 
 func BenchmarkMarshal(b *testing.B) {

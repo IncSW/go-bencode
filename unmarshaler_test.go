@@ -44,6 +44,36 @@ func TestUnmarshal(t *testing.T) {
 	}, result) {
 		return
 	}
+
+	result, err = Unmarshal([]byte("i38"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: invalid integer field", err.Error()) {
+		return
+	}
+
+	result, err = Unmarshal([]byte("i38qe"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal(`strconv.ParseInt: parsing "38q": invalid syntax`, err.Error()) {
+		return
+	}
+
+	result, err = Unmarshal([]byte("l"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: invalid list field", err.Error()) {
+		return
+	}
+
+	result, err = Unmarshal([]byte("d"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: invalid dictionary field", err.Error()) {
+		return
+	}
+
+	result, err = Unmarshal([]byte("di38ee"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: non-string dictionary key", err.Error()) {
+		return
+	}
+
+	result, err = Unmarshal([]byte("38"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: invalid string field", err.Error()) {
+		return
+	}
 }
 
 func BenchmarkUnmarshal(b *testing.B) {

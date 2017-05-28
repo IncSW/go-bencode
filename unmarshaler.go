@@ -80,13 +80,13 @@ func unmarshal(data []byte) (interface{}, int, error) {
 				return nil, 0, err
 			}
 
-			data = data[length:]
-			totalLength += length
 			key, ok := value.([]byte)
 			if !ok {
 				return nil, 0, errors.New("bencode: non-string dictionary key")
 			}
 
+			data = data[length:]
+			totalLength += length
 			value, length, err = unmarshal(data)
 			if err != nil {
 				return nil, 0, err
