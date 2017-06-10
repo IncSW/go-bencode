@@ -1,4 +1,9 @@
-# go-bencode [![Build Status](https://travis-ci.org/IncSW/go-bencode.svg?branch=master)](https://travis-ci.org/IncSW/go-bencode) [![Coverage Status](https://coveralls.io/repos/github/IncSW/go-bencode/badge.svg)](https://coveralls.io/github/IncSW/go-bencode)
+# go-bencode
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://img.shields.io/travis/IncSW/go-bencode.svg?style=flat-square)](https://travis-ci.org/IncSW/go-bencode)
+[![Coverage Status](https://img.shields.io/coveralls/IncSW/go-bencode/master.svg?style=flat-square)](https://coveralls.io/github/IncSW/go-bencode)
+[![Go Report Card](https://goreportcard.com/badge/github.com/IncSW/go-bencode?style=flat-square)](https://goreportcard.com/report/github.com/IncSW/go-bencode)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/IncSW/go-bencode)
 
 ## Installation
 
