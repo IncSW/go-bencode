@@ -1,7 +1,7 @@
 language: go
 sudo: false
 go:
-  - 1.10
+  - 1.10.4
   - 1.11
 before_install:
   - go get github.com/chihaya/chihaya/frontend/http/bencode
