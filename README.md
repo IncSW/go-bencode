@@ -25,25 +25,27 @@ data, err := Unmarshal(value)
 
 ## Performance
 
+### Go 1.11, Debian 9.1, i7-7700, bo5
+
 ### Marshal
 
 | Library | Time | Bytes Allocated | Objects Allocated |
 | :--- | :---: | :---: | :---: |
-| IncSW/go-bencode | 1493 ns/op | 554 B/op | 15 allocs/op |
-| marksamman/bencode | 1819 ns/op | 464 B/op | 15 allocs/op |
-| chihaya/bencode | 3614 ns/op | 1038 B/op | 64 allocs/op |
-| jackpal/bencode-go | 8497 ns/op | 2289 B/op | 66 allocs/op |
-| zeebo/bencode | 7917 ns/op | 1648 B/op | 54 allocs/op |
+| IncSW/go-bencode | 717 ns/op | 528 B/op | 3 allocs/op |
+| marksamman/bencode | 924 ns/op | 448 B/op | 8 allocs/op |
+| chihaya/bencode | 1833 ns/op | 1010 B/op | 52 allocs/op |
+| jackpal/bencode-go | 4984 ns/op | 2128 B/op | 56 allocs/op |
+| zeebo/bencode | 5214 ns/op | 1488 B/op | 44 allocs/op |
 
 ### Unmarshal
 
 | Library | Time | Bytes Allocated | Objects Allocated |
 | :--- | :---: | :---: | :---: |
-| IncSW/go-bencode | 3151 ns/op | 1360 B/op | 46 allocs/op |
-| marksamman/bencode | 5374 ns/op | 5968 B/op | 71 allocs/op |
-| chihaya/bencode | 5281 ns/op | 5984 B/op | 66 allocs/op |
-| jackpal/bencode-go | 6850 ns/op | 3073 B/op | 102 allocs/op |
-| zeebo/bencode | 10844 ns/op | 6576 B/op | 104 allocs/op |
+| IncSW/go-bencode | 1742 ns/op | 1344 B/op | 41 allocs/op |
+| jackpal/bencode-go 🠅2 | 2565 ns/op | 1712 B/op | 59 allocs/op |
+| chihaya/bencode | 2913 ns/op | 5968 B/op | 61 allocs/op |
+| marksamman/bencode 🠇2 | 3173 ns/op | 5920 B/op | 66 allocs/op |
+| zeebo/bencode | 7533 ns/op | 6576 B/op | 99 allocs/op |
 
 ## License
 
