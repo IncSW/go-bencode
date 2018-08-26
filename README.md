@@ -25,7 +25,7 @@ data, err := Unmarshal(value)
 
 ## Performance
 
-### Go 1.11, Debian 9.1, i7-7700, bo5
+### Go 1.11, Debian 9.1, i7-7700
 
 ### Marshal
 
