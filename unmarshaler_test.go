@@ -6,10 +6,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var unmarshalTestData = []byte("d4:infod6:lengthi170917888e12:piece lengthi262144e4:name30:debian-8.8.0-arm64-netinst.isoe8:announce38:udp://tracker.publicbt.com:80/announce13:announce-listll38:udp://tracker.publicbt.com:80/announceel44:udp://tracker.openbittorrent.com:80/announceee7:comment33:Debian CD from cdimage.debian.orge")
+var (
+	unmarshalTestData      = []byte("d4:infod6:lengthi170917888e12:piece lengthi262144e4:name30:debian-8.8.0-arm64-netinst.isoe8:announce38:udp://tracker.publicbt.com:80/announce13:announce-listll38:udp://tracker.publicbt.com:80/announceel44:udp://tracker.openbittorrent.com:80/announceee7:comment33:Debian CD from cdimage.debian.orge")
+	unmarshalWrongTestData = []byte("d4:infod6:lengthi170917888e12:piece lengthi262144e4:name30:debian-8.8.0-arm64-netinst.isoe8:announce38:udp://tracker.publicbt.com:80/announce13:announce-listll38:udp://tracker.publicbt.com:80/announceel44:udp://tracker.openbittorrent.com:80/announceee7:comment35:Debian CD from cdimage.debian.orge")
+)
 
 func TestUnmarshal(t *testing.T) {
 	assert := assert.New(t)
+
+	_, err := Unmarshal(unmarshalTestData)
+	if !assert.NoError(err) {
+		return
+	}
+
+	_, err = Unmarshal(unmarshalWrongTestData)
+	if !assert.Error(err) || !assert.Equal("bencode: not a valid bencoded string", err.Error()) {
+		return
+	}
 
 	data, length, ok := readUntil([]byte("38:udp://tracker.publicbt.com:80/announce"), ':')
 	if !assert.True(ok) || !assert.Equal(2, length) || !assert.Equal([]byte("38"), data) {
