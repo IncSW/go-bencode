@@ -109,6 +109,9 @@ func unmarshal(data []byte) (interface{}, int, error) {
 		}
 
 		endPosition := length + 1 + int(stringLength)
+		if endPosition > len(data) {
+			return nil, 0, errors.New("bencode: not a valid bencoded string")
+		}
 
 		return data[length+1 : endPosition], endPosition, nil
 	}
