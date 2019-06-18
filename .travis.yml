@@ -1,18 +1,19 @@
 language: go
 sudo: false
 go:
-  - 1.10.4
-  - 1.11
+    - 1.11
+    - 1.12
 before_install:
-  - go get github.com/chihaya/chihaya/frontend/http/bencode
-  - go get github.com/jackpal/bencode-go
-  - go get github.com/marksamman/bencode
-  - go get github.com/zeebo/bencode
-  - go get github.com/mattn/goveralls
-  - go get github.com/stretchr/testify/assert
+    - go get github.com/chihaya/chihaya/frontend/http/bencode
+    - go get github.com/jackpal/bencode-go
+    - go get github.com/marksamman/bencode
+    - go get github.com/zeebo/bencode
+    - go get github.com/nabilanam/bencode
+    - go get github.com/mattn/goveralls
+    - go get github.com/stretchr/testify/assert
 go_import_path: github.com/IncSW/go-bencode
 script:
-  - make test
-  - make bench
+    - make test
+    - make bench
 after_success:
-  - make coveralls
+    - make coveralls
