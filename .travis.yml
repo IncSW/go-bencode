@@ -8,7 +8,8 @@ before_install:
     - go get github.com/jackpal/bencode-go
     - go get github.com/marksamman/bencode
     - go get github.com/zeebo/bencode
-    - go get github.com/nabilanam/bencode
+    - go get github.com/nabilanam/bencode/decoder
+    - go get github.com/nabilanam/bencode/encoder
     - go get github.com/mattn/goveralls
     - go get github.com/stretchr/testify/assert
 go_import_path: github.com/IncSW/go-bencode
