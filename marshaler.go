@@ -6,75 +6,70 @@ import (
 )
 
 func Marshal(data interface{}) ([]byte, error) {
-	result := make([]byte, 512) // WTF
-	length, _, err := marshal(data, &result, 0, 512)
+	return MarshalTo(make([]byte, 512), data)
+}
+
+func MarshalTo(dst []byte, data interface{}) ([]byte, error) {
+	if cap(dst) > len(dst) {
+		dst = dst[:cap(dst)]
+	} else if len(dst) == 0 {
+		dst = make([]byte, 512)
+	}
+	length, _, err := marshal(data, &dst, 0, len(dst))
 	if err != nil {
 		return nil, err
 	}
-
-	return result[:length], nil
+	return dst[:length], nil
 }
 
 func marshal(data interface{}, result *[]byte, offset int, length int) (int, int, error) {
 	switch value := data.(type) {
 	case int64:
 		offset, length = marshalInt(value, result, offset, length)
-
 		return offset, length, nil
 
 	case int32:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case int16:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case int8:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case int:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case uint64:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case uint32:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case uint16:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case uint8:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case uint:
 		offset, length = marshalInt(int64(value), result, offset, length)
-
 		return offset, length, nil
 
 	case []byte:
 		offset, length = marshalBytes(value, result, offset, length)
-
 		return offset, length, nil
 
 	case string:
-		offset, length = marshalBytes([]byte(value), result, offset, length)
-
+		offset, length = marshalBytes(s2b(value), result, offset, length)
 		return offset, length, nil
 
 	case []interface{}:
@@ -111,7 +106,7 @@ func prepareBuffer(result *[]byte, offset int, length int, neededLength int) int
 }
 
 func marshalInt(data int64, result *[]byte, offset int, length int) (int, int) {
-	intBuffer := []byte(strconv.FormatInt(data, 10))
+	intBuffer := s2b(strconv.FormatInt(data, 10))
 	intBufferLength := len(intBuffer)
 	length = prepareBuffer(result, offset, length, intBufferLength+2)
 
@@ -127,7 +122,7 @@ func marshalInt(data int64, result *[]byte, offset int, length int) (int, int) {
 
 func marshalBytes(data []byte, result *[]byte, offset int, length int) (int, int) {
 	dataLength := len(data)
-	lengthBuffer := []byte(strconv.Itoa(dataLength))
+	lengthBuffer := s2b(strconv.Itoa(dataLength))
 	lengthBufferLength := len(lengthBuffer)
 	length = prepareBuffer(result, offset, length, lengthBufferLength+1+dataLength)
 
@@ -170,7 +165,7 @@ func marshalDictionary(data map[string]interface{}, result *[]byte, offset int, 
 	offset++
 
 	for key, data := range data {
-		offset, length = marshalBytes([]byte(key), result, offset, length)
+		offset, length = marshalBytes(s2b(key), result, offset, length)
 		var err error
 		offset, length, err = marshal(data, result, offset, length)
 		if err != nil {
