@@ -43,7 +43,7 @@ data, err := Unmarshal(value)
 | Library            |    Time    | Bytes Allocated | Objects Allocated |
 | :----------------- | :--------: | :-------------: | :---------------: |
 | nabilanam/bencode  | 1341 ns/op |    1264 B/op    |   39 allocs/op    |
-| IncSW/go-bencode   | 1452 ns/op |    1248 B/op    |   25 allocs/op    |
+| IncSW/go-bencode   | 1435 ns/op |    1248 B/op    |   25 allocs/op    |
 | jackpal/bencode-go | 2652 ns/op |    1712 B/op    |   59 allocs/op    |
 | marksamman/bencode | 2877 ns/op |    5920 B/op    |   66 allocs/op    |
 | chihaya/bencode    | 2896 ns/op |    5904 B/op    |   61 allocs/op    |
