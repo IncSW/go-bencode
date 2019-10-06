@@ -14,28 +14,13 @@ var (
 func TestUnmarshal(t *testing.T) {
 	assert := assert.New(t)
 
-	_, err := Unmarshal(unmarshalTestData)
-	if !assert.NoError(err) {
-		return
-	}
-
-	_, err = Unmarshal(unmarshalWrongTestData)
-	if !assert.Error(err) || !assert.Equal("bencode: not a valid bencoded string", err.Error()) {
-		return
-	}
-
-	data, length, ok := readUntil([]byte("38:udp://tracker.publicbt.com:80/announce"), ':')
-	if !assert.True(ok) || !assert.Equal(2, length) || !assert.Equal([]byte("38"), data) {
-		return
-	}
-
 	result, err := Unmarshal([]byte("i38e"))
 	if !assert.NoError(err) || !assert.Equal(int64(38), result) {
 		return
 	}
 
 	result, err = Unmarshal([]byte("38:udp://tracker.publicbt.com:80/announce"))
-	if !assert.NoError(err) || !assert.Equal([]byte("udp://tracker.publicbt.com:80/announce"), result) {
+	if !assert.NoError(err) || !assert.Equal("udp://tracker.publicbt.com:80/announce", string(result.([]byte))) {
 		return
 	}
 
@@ -55,6 +40,16 @@ func TestUnmarshal(t *testing.T) {
 			[]interface{}{[]byte("udp://tracker.openbittorrent.com:80/announce")},
 		},
 	}, result) {
+		return
+	}
+
+	_, err = Unmarshal(unmarshalTestData)
+	if !assert.NoError(err) {
+		return
+	}
+
+	_, err = Unmarshal(unmarshalWrongTestData)
+	if !assert.Error(err) || !assert.Equal("bencode: not a valid bencoded string", err.Error()) {
 		return
 	}
 
@@ -85,6 +80,11 @@ func TestUnmarshal(t *testing.T) {
 
 	result, err = Unmarshal([]byte("38"))
 	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: invalid string field", err.Error()) {
+		return
+	}
+
+	result, err = Unmarshal([]byte("10:wasd"))
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: not a valid bencoded string", err.Error()) {
 		return
 	}
 }
