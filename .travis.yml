@@ -3,6 +3,7 @@ sudo: false
 go:
     - 1.11
     - 1.12
+    - 1.13
 before_install:
     - go get github.com/chihaya/chihaya/frontend/http/bencode
     - go get github.com/jackpal/bencode-go
