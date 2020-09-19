@@ -2,6 +2,7 @@ package bencode
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 )
 
@@ -164,10 +165,16 @@ func marshalDictionary(data map[string]interface{}, result *[]byte, offset int, 
 	(*result)[offset] = 'd'
 	offset++
 
-	for key, data := range data {
+	keys := make([]string, 0, len(data))
+	for key, _ := range data {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	for _, key := range keys {
 		offset, length = marshalBytes(s2b(key), result, offset, length)
 		var err error
-		offset, length, err = marshal(data, result, offset, length)
+		offset, length, err = marshal(data[key], result, offset, length)
 		if err != nil {
 			return 0, 0, err
 		}
