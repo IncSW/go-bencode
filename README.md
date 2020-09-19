@@ -16,11 +16,11 @@ import bencode "github.com/IncSW/go-bencode"
 ## Quick Start
 
 ```go
-data, err := Marshal(value)
+data, err := bencode.Marshal(value)
 ```
 
 ```go
-data, err := Unmarshal(value)
+data, err := bencode.Unmarshal(value)
 ```
 
 ## Performance
