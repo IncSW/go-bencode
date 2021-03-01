@@ -64,15 +64,11 @@ func (u *unmarshaler) unmarshal() (interface{}, error) {
 				u.cursor += 1
 				return dictionary, nil
 			}
-			value, err := u.unmarshal()
+			key, err := u.unmarshalString()
 			if err != nil {
-				return nil, err
-			}
-			key, ok := value.([]byte)
-			if !ok {
 				return nil, errors.New("bencode: non-string dictionary key")
 			}
-			value, err = u.unmarshal()
+			value, err := u.unmarshal()
 			if err != nil {
 				return nil, err
 			}
@@ -80,22 +76,29 @@ func (u *unmarshaler) unmarshal() (interface{}, error) {
 		}
 
 	default:
-		index := bytes.IndexByte(u.data[u.cursor:], ':')
-		if index == -1 {
-			return nil, errors.New("bencode: invalid string field")
-		}
-		index += u.cursor
-		stringLength, err := strconv.ParseInt(b2s(u.data[u.cursor:index]), 10, 64)
-		if err != nil {
-			return nil, err
-		}
-		index += 1
-		endIndex := index + int(stringLength)
-		if endIndex > u.length {
-			return nil, errors.New("bencode: not a valid bencoded string")
-		}
-		value := u.data[index:endIndex]
-		u.cursor = endIndex
-		return value, nil
+		return u.unmarshalString()
 	}
+}
+
+func (u *unmarshaler) unmarshalString() ([]byte, error) {
+	if u.data[u.cursor] < '0' || u.data[u.cursor] > '9' {
+		return nil, errors.New("bencode: invalid string field")
+	}
+	index := bytes.IndexByte(u.data[u.cursor:], ':')
+	if index == -1 {
+		return nil, errors.New("bencode: invalid string field")
+	}
+	index += u.cursor
+	stringLength, err := strconv.ParseInt(b2s(u.data[u.cursor:index]), 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	index += 1
+	endIndex := index + int(stringLength)
+	if endIndex > u.length {
+		return nil, errors.New("bencode: not a valid bencoded string")
+	}
+	value := u.data[index:endIndex]
+	u.cursor = endIndex
+	return value, nil
 }

@@ -25,29 +25,31 @@ data, err := bencode.Unmarshal(value)
 
 ## Performance
 
-### Go 1.13.1, Debian 9.1, i7-7700
+### Go 1.16, Debian 9.1, i7-7700
 
 ### Marshal
 
-| Library            |    Time    | Bytes Allocated | Objects Allocated |
-| :----------------- | :--------: | :-------------: | :---------------: |
-| IncSW/go-bencode   | 485 ns/op  |     16 B/op     |    2 allocs/op    |
-| marksamman/bencode | 897 ns/op  |    400 B/op     |    8 allocs/op    |
-| chihaya/bencode    | 1846 ns/op |    1010 B/op    |   53 allocs/op    |
-| nabilanam/bencode  | 2027 ns/op |    1216 B/op    |   44 allocs/op    |
-| jackpal/bencode-go | 4968 ns/op |    2128 B/op    |   57 allocs/op    |
-| zeebo/bencode      | 5147 ns/op |    1488 B/op    |   45 allocs/op    |
+| Library             |    Time     | Bytes Allocated | Objects Allocated |
+| :------------------ | :---------: | :-------------: | :---------------: |
+| IncSW/go-bencode    | 795.9 ns/op |    176 B/op     |    6 allocs/op    |
+| marksamman/bencode  | 820.3 ns/op |    384 B/op     |    8 allocs/op    |
+| cristalhq/bencode   | 994.2 ns/op |    928 B/op     |    4 allocs/op    |
+| aleksatr/go-bencode | 1061 ns/op  |    736 B/op     |    9 allocs/op    |
+| nabilanam/bencode   | 2103 ns/op  |    1192 B/op    |   44 allocs/op    |
+| jackpal/bencode-go  | 4676 ns/op  |    2016 B/op    |   45 allocs/op    |
+| zeebo/bencode       | 4889 ns/op  |    1376 B/op    |   33 allocs/op    |
 
 ### Unmarshal
 
-| Library            |    Time    | Bytes Allocated | Objects Allocated |
-| :----------------- | :--------: | :-------------: | :---------------: |
-| nabilanam/bencode  | 1341 ns/op |    1264 B/op    |   39 allocs/op    |
-| IncSW/go-bencode   | 1435 ns/op |    1248 B/op    |   25 allocs/op    |
-| jackpal/bencode-go | 2652 ns/op |    1712 B/op    |   59 allocs/op    |
-| marksamman/bencode | 2877 ns/op |    5920 B/op    |   66 allocs/op    |
-| chihaya/bencode    | 2896 ns/op |    5904 B/op    |   61 allocs/op    |
-| zeebo/bencode      | 6595 ns/op |    6576 B/op    |   99 allocs/op    |
+| Library             |    Time    | Bytes Allocated | Objects Allocated |
+| :------------------ | :--------: | :-------------: | :---------------: |
+| IncSW/go-bencode    | 1149 ns/op |    960 B/op     |   18 allocs/op    |
+| cristalhq/bencode   | 1160 ns/op |    960 B/op     |   18 allocs/op    |
+| nabilanam/bencode   | 1379 ns/op |    1240 B/op    |   39 allocs/op    |
+| aleksatr/go-bencode | 2270 ns/op |    1816 B/op    |   51 allocs/op    |
+| jackpal/bencode-go  | 2577 ns/op |    1688 B/op    |   59 allocs/op    |
+| marksamman/bencode  | 2725 ns/op |    5768 B/op    |   54 allocs/op    |
+| zeebo/bencode       | 5988 ns/op |    6392 B/op    |   92 allocs/op    |
 
 ## License
 
