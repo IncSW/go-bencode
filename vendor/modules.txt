@@ -1,0 +1,28 @@
+# github.com/aleksatr/go-bencode v0.0.0-20200413201258-b899a06787b7
+## explicit
+github.com/aleksatr/go-bencode
+# github.com/cristalhq/bencode v0.1.1
+## explicit
+github.com/cristalhq/bencode
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
+# github.com/jackpal/bencode-go v1.0.0
+## explicit
+github.com/jackpal/bencode-go
+# github.com/marksamman/bencode v0.0.0-20150821143521-dc84f26e086e
+## explicit
+github.com/marksamman/bencode
+# github.com/nabilanam/bencode v0.0.0-20190329141800-cde546b1530b
+## explicit
+github.com/nabilanam/bencode/decoder
+github.com/nabilanam/bencode/encoder
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/stretchr/testify v1.6.1
+## explicit
+github.com/stretchr/testify/assert
+# github.com/zeebo/bencode v1.0.0
+## explicit
+github.com/zeebo/bencode
+# gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+gopkg.in/yaml.v3
