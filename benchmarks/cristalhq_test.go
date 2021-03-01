@@ -9,7 +9,10 @@ import (
 func BenchmarkCristalhqMarshal(b *testing.B) {
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
-		bencode.Marshal(marshalTestData)
+		_, err := bencode.Marshal(marshalTestData)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -17,6 +20,9 @@ func BenchmarkCristalhqUnmarshal(b *testing.B) {
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
 		var torrent interface{}
-		bencode.Unmarshal(unmarshalTestData, &torrent)
+		err := bencode.Unmarshal(unmarshalTestData, &torrent)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }

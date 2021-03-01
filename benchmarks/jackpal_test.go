@@ -10,13 +10,19 @@ import (
 func BenchmarkJackpalBencodeMarshal(b *testing.B) {
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
-		bencode.Marshal(bytes.NewBuffer(nil), marshalTestData)
+		err := bencode.Marshal(bytes.NewBuffer(nil), marshalTestData)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
 func BenchmarkJackpalBencodeUnmarshal(b *testing.B) {
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
-		bencode.Decode(bytes.NewReader(unmarshalTestData))
+		_, err := bencode.Decode(bytes.NewReader(unmarshalTestData))
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }

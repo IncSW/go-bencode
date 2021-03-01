@@ -3,13 +3,16 @@ package benchmarks
 import (
 	"testing"
 
-	bencode "github.com/zeebo/bencode"
+	"github.com/zeebo/bencode"
 )
 
 func BenchmarkZeeboBencodeMarshal(b *testing.B) {
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
-		bencode.EncodeBytes(marshalTestData)
+		_, err := bencode.EncodeBytes(marshalTestData)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -17,6 +20,9 @@ func BenchmarkZeeboBencodeUnmarshal(b *testing.B) {
 	b.ReportAllocs()
 	for n := 0; n < b.N; n++ {
 		var torrent interface{}
-		bencode.DecodeBytes(unmarshalTestData, &torrent)
+		err := bencode.DecodeBytes(unmarshalTestData, &torrent)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
