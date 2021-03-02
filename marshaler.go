@@ -1,10 +1,111 @@
 package bencode
 
-import (
-	"fmt"
-	"sort"
-	"strconv"
-)
+import "fmt"
+
+func prepareBuffer(result *[]byte, offset int, length int, neededLength int) int {
+	availableLength := length - offset
+	if availableLength >= neededLength {
+		return length
+	}
+
+	rate := 1
+	for availableLength < neededLength {
+		rate++
+		availableLength = length*rate - offset
+	}
+
+	newResult := make([]byte, length*rate)
+	copy(newResult, (*result)[:length])
+	length *= rate
+	*result = newResult
+
+	return length
+}
+
+func writeIntFirstBuffer(value uint32, result *[]byte, offset int, length int) (int, int) {
+	length = prepareBuffer(result, offset, length, 3)
+	start := value >> 24
+	if start == 0 {
+		(*result)[offset] = byte(value >> 16)
+		offset++
+		(*result)[offset] = byte(value >> 8)
+		offset++
+	} else if start == 1 {
+		(*result)[offset] = byte(value >> 8)
+		offset++
+	}
+	(*result)[offset] = byte(value)
+	offset++
+	return offset, length
+}
+
+func writeIntBuffer(value uint32, result *[]byte, offset int, length int) (int, int) {
+	length = prepareBuffer(result, offset, length, 3)
+	(*result)[offset] = byte(value >> 16)
+	offset++
+	(*result)[offset] = byte(value >> 8)
+	offset++
+	(*result)[offset] = byte(value)
+	offset++
+	return offset, length
+}
+
+func writeInt(value int64, result *[]byte, offset int, length int) (int, int) {
+	if value < 0 {
+		value = -value
+		length = prepareBuffer(result, offset, length, 1)
+		(*result)[offset] = '-'
+		offset++
+	}
+	q1 := value / 1000
+	if q1 == 0 {
+		return writeIntFirstBuffer(digits[value], result, offset, length)
+	}
+	r1 := value - q1*1000
+	q2 := q1 / 1000
+	if q2 == 0 {
+		offset, length = writeIntFirstBuffer(digits[q1], result, offset, length)
+		return writeIntBuffer(digits[r1], result, offset, length)
+	}
+	r2 := q1 - q2*1000
+	q3 := q2 / 1000
+	if q3 == 0 {
+		offset, length = writeIntFirstBuffer(digits[q2], result, offset, length)
+		offset, length = writeIntBuffer(digits[r2], result, offset, length)
+		return writeIntBuffer(digits[r1], result, offset, length)
+	}
+	r3 := q2 - q3*1000
+	q4 := q3 / 1000
+	if q4 == 0 {
+		offset, length = writeIntFirstBuffer(digits[q3], result, offset, length)
+		offset, length = writeIntBuffer(digits[r3], result, offset, length)
+		offset, length = writeIntBuffer(digits[r2], result, offset, length)
+		return writeIntBuffer(digits[r1], result, offset, length)
+	}
+	r4 := q3 - q4*1000
+	q5 := q4 / 1000
+	if q5 == 0 {
+		offset, length = writeIntFirstBuffer(digits[q4], result, offset, length)
+		offset, length = writeIntBuffer(digits[r4], result, offset, length)
+		offset, length = writeIntBuffer(digits[r3], result, offset, length)
+		offset, length = writeIntBuffer(digits[r2], result, offset, length)
+		return writeIntBuffer(digits[r1], result, offset, length)
+	}
+	r5 := q4 - q5*1000
+	q6 := q5 / 1000
+	if q6 == 0 {
+		offset, length = writeIntFirstBuffer(digits[q5], result, offset, length)
+	} else {
+		offset, length = writeIntFirstBuffer(digits[q6], result, offset, length)
+		r6 := q5 - q6*1000
+		offset, length = writeIntBuffer(digits[r6], result, offset, length)
+	}
+	offset, length = writeIntBuffer(digits[r5], result, offset, length)
+	offset, length = writeIntBuffer(digits[r4], result, offset, length)
+	offset, length = writeIntBuffer(digits[r3], result, offset, length)
+	offset, length = writeIntBuffer(digits[r2], result, offset, length)
+	return writeIntBuffer(digits[r1], result, offset, length)
+}
 
 func Marshal(data interface{}) ([]byte, error) {
 	return MarshalTo(make([]byte, 512), data)
@@ -84,56 +185,25 @@ func marshal(data interface{}, result *[]byte, offset int, length int) (int, int
 	}
 }
 
-func prepareBuffer(result *[]byte, offset int, length int, neededLength int) int {
-	availableLength := length - offset
-	if availableLength >= neededLength {
-		return length
-	}
-
-	rate := 1
-	for availableLength < neededLength {
-		rate++
-		availableLength = length*rate - offset
-	}
-
-	if rate > 1 {
-		newResult := make([]byte, length*rate)
-		copy(newResult, (*result)[:length])
-		length *= rate
-		*result = newResult
-	}
-
-	return length
-}
-
 func marshalInt(data int64, result *[]byte, offset int, length int) (int, int) {
-	intBuffer := s2b(strconv.FormatInt(data, 10))
-	intBufferLength := len(intBuffer)
-	length = prepareBuffer(result, offset, length, intBufferLength+2)
-
+	length = prepareBuffer(result, offset, length, 1)
 	(*result)[offset] = 'i'
 	offset++
-	copy((*result)[offset:], intBuffer)
-	offset += intBufferLength
+	offset, length = writeInt(data, result, offset, length)
+	length = prepareBuffer(result, offset, length, 1)
 	(*result)[offset] = 'e'
 	offset++
-
 	return offset, length
 }
 
 func marshalBytes(data []byte, result *[]byte, offset int, length int) (int, int) {
 	dataLength := len(data)
-	lengthBuffer := s2b(strconv.Itoa(dataLength))
-	lengthBufferLength := len(lengthBuffer)
-	length = prepareBuffer(result, offset, length, lengthBufferLength+1+dataLength)
-
-	copy((*result)[offset:], lengthBuffer)
-	offset += lengthBufferLength
+	offset, length = writeInt(int64(dataLength), result, offset, length)
+	length = prepareBuffer(result, offset, length, dataLength+1)
 	(*result)[offset] = ':'
 	offset++
 	copy((*result)[offset:], data)
 	offset += dataLength
-
 	return offset, length
 }
 
@@ -169,7 +239,7 @@ func marshalDictionary(data map[string]interface{}, result *[]byte, offset int, 
 	for key, _ := range data {
 		keys = append(keys, key)
 	}
-	sort.Strings(keys)
+	sortStrings(keys)
 
 	for _, key := range keys {
 		offset, length = marshalBytes(s2b(key), result, offset, length)

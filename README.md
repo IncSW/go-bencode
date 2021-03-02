@@ -16,14 +16,26 @@ import bencode "github.com/IncSW/go-bencode"
 ## Quick Start
 
 ```go
-data, err := bencode.Marshal(value)
+var dict interface{} = map[string]interface{}{
+	"int":    123,
+	"string": "Hello, World",
+	"list":   []interface{}{"foo", "bar"},
+}
+data, err := bencode.Marshal(dict)
+if err != nil {
+	panic(err)
+}
+fmt.Println(string(data))
+
+// Output:
+// d3:inti123e4:listl3:foo3:bare6:string12:Hello, Worlde
 ```
 
 ```go
 data, err := bencode.Unmarshal(value)
 ```
 
-## Performance
+## Performance [benchmarks](https://github.com/IncSW/go-bencode/tree/benchmarks/benchmarks)
 
 ### Go 1.16, Debian 9.1, i7-7700
 
@@ -31,7 +43,7 @@ data, err := bencode.Unmarshal(value)
 
 | Library             |    Time     | Bytes Allocated | Objects Allocated |
 | :------------------ | :---------: | :-------------: | :---------------: |
-| IncSW/go-bencode    | 795.9 ns/op |    176 B/op     |    6 allocs/op    |
+| IncSW/go-bencode    | 614.4 ns/op |    112 B/op     |    2 allocs/op    |
 | marksamman/bencode  | 820.3 ns/op |    384 B/op     |    8 allocs/op    |
 | cristalhq/bencode   | 994.2 ns/op |    928 B/op     |    4 allocs/op    |
 | aleksatr/go-bencode | 1061 ns/op  |    736 B/op     |    9 allocs/op    |

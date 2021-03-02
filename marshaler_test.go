@@ -52,6 +52,16 @@ func TestMarshal(t *testing.T) {
 		return
 	}
 
+	result, err = Marshal(marshalTestData)
+	if !assert.NoError(err) || !assert.Equal(unmarshalTestData, result) {
+		return
+	}
+
+	result, err = MarshalTo(make([]byte, 1), marshalTestData)
+	if !assert.NoError(err) || !assert.Equal(unmarshalTestData, result) {
+		return
+	}
+
 	result, err = Marshal(nil)
 	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: unsupported type: <nil>", err.Error()) {
 		return
