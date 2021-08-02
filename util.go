@@ -6,20 +6,6 @@ import (
 	"unsafe"
 )
 
-var digits []uint32
-
-func init() {
-	digits = make([]uint32, 1000)
-	for i := uint32(0); i < 1000; i++ {
-		digits[i] = (((i / 100) + '0') << 16) + ((((i / 10) % 10) + '0') << 8) + i%10 + '0'
-		if i < 10 {
-			digits[i] += 2 << 24
-		} else if i < 100 {
-			digits[i] += 1 << 24
-		}
-	}
-}
-
 const strSliceLen = 20
 
 func sortStrings(ss []string) {
