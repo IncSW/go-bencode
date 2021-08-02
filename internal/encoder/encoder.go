@@ -1,6 +1,10 @@
-package bencode
+package encoder
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/IncSW/go-bencode/internal"
+)
 
 func prepareBuffer(result *[]byte, offset int, length int, neededLength int) int {
 	availableLength := length - offset
@@ -20,10 +24,6 @@ func prepareBuffer(result *[]byte, offset int, length int, neededLength int) int
 	*result = newResult
 
 	return length
-}
-
-func Marshal(data interface{}) ([]byte, error) {
-	return MarshalTo(make([]byte, 512), data)
 }
 
 func MarshalTo(dst []byte, data interface{}) ([]byte, error) {
@@ -86,7 +86,7 @@ func marshal(data interface{}, result *[]byte, offset int, length int) (int, int
 		return offset, length, nil
 
 	case string:
-		offset, length = marshalBytes(s2b(value), result, offset, length)
+		offset, length = marshalBytes(internal.S2B(value), result, offset, length)
 		return offset, length, nil
 
 	case []interface{}:
@@ -143,10 +143,10 @@ func marshalDictionary(data map[string]interface{}, result *[]byte, offset int, 
 	for key, _ := range data {
 		keys = append(keys, key)
 	}
-	sortStrings(keys)
+	internal.SortStrings(keys)
 
 	for _, key := range keys {
-		offset, length = marshalBytes(s2b(key), result, offset, length)
+		offset, length = marshalBytes(internal.S2B(key), result, offset, length)
 		var err error
 		offset, length, err = marshal(data[key], result, offset, length)
 		if err != nil {

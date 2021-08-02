@@ -1,9 +1,11 @@
-package bencode
+package decoder
 
 import (
 	"bytes"
 	"errors"
 	"strconv"
+
+	"github.com/IncSW/go-bencode/internal"
 )
 
 func Unmarshal(data []byte) (interface{}, error) {
@@ -28,7 +30,7 @@ func (u *unmarshaler) unmarshal() (interface{}, error) {
 			return nil, errors.New("bencode: invalid integer field")
 		}
 		index += u.cursor
-		integer, err := strconv.ParseInt(b2s(u.data[u.cursor:index]), 10, 64)
+		integer, err := strconv.ParseInt(internal.B2S(u.data[u.cursor:index]), 10, 64)
 		if err != nil {
 			return nil, err
 		}
@@ -72,7 +74,7 @@ func (u *unmarshaler) unmarshal() (interface{}, error) {
 			if err != nil {
 				return nil, err
 			}
-			dictionary[b2s(key)] = value
+			dictionary[internal.B2S(key)] = value
 		}
 
 	default:
@@ -89,7 +91,7 @@ func (u *unmarshaler) unmarshalString() ([]byte, error) {
 		return nil, errors.New("bencode: invalid string field")
 	}
 	index += u.cursor
-	stringLength, err := strconv.ParseInt(b2s(u.data[u.cursor:index]), 10, 64)
+	stringLength, err := strconv.ParseInt(internal.B2S(u.data[u.cursor:index]), 10, 64)
 	if err != nil {
 		return nil, err
 	}

@@ -1,4 +1,4 @@
-package bencode
+package encoder
 
 import "unsafe"
 
