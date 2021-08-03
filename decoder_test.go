@@ -59,7 +59,7 @@ func TestUnmarshal(t *testing.T) {
 	}
 
 	result, err = Unmarshal([]byte("i38qe"))
-	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal(`strconv.ParseInt: parsing "38q": invalid syntax`, err.Error()) {
+	if !assert.Error(err) || !assert.Nil(result) || !assert.Equal("bencode: invalid integer byte: 113", err.Error()) {
 		return
 	}
 

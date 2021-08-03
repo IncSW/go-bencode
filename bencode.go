@@ -16,5 +16,6 @@ func Marshal(data interface{}) ([]byte, error) {
 }
 
 func Unmarshal(data []byte) (interface{}, error) {
-	return decoder.Unmarshal(data)
+	var d decoder.Decoder
+	return d.Decode(data)
 }

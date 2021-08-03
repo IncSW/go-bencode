@@ -56,7 +56,7 @@ data, err := bencode.Unmarshal(value)
 
 | Library             |    Time    | Bytes Allocated | Objects Allocated |
 | :------------------ | :--------: | :-------------: | :---------------: |
-| IncSW/go-bencode    | 1149 ns/op |    960 B/op     |   18 allocs/op    |
+| IncSW/go-bencode    | 1001 ns/op |    960 B/op     |   18 allocs/op    |
 | cristalhq/bencode   | 1160 ns/op |    960 B/op     |   18 allocs/op    |
 | nabilanam/bencode   | 1379 ns/op |    1240 B/op    |   39 allocs/op    |
 | aleksatr/go-bencode | 2270 ns/op |    1816 B/op    |   51 allocs/op    |
