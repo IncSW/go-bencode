@@ -2,7 +2,6 @@ package decoder
 
 import (
 	"errors"
-	_ "unsafe"
 
 	"github.com/IncSW/go-bencode/internal"
 )
