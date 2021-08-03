@@ -1,5 +1,6 @@
 package encoder
 
+//go:nosplit
 func (e *Encoder) encodeBytes(data []byte) {
 	dataLength := len(data)
 	e.grow(dataLength + 23)

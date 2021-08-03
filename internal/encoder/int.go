@@ -44,6 +44,7 @@ func init() {
 	}
 }
 
+//go:nosplit
 func (e *Encoder) writeInt(data int64) {
 	u64 := uint64(data)
 	n := u64 & intMask
@@ -86,6 +87,7 @@ func (e *Encoder) writeInt(data int64) {
 	e.write(b[i:])
 }
 
+//go:nosplit
 func (e *Encoder) encodeInt(data int64) {
 	e.grow(24)
 	e.writeByte('i')

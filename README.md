@@ -43,8 +43,8 @@ data, err := bencode.Unmarshal(value)
 
 | Library                      |    Time     | Bytes Allocated | Objects Allocated |
 | :--------------------------- | :---------: | :-------------: | :---------------: |
-| IncSW/go-bencode [MarshalTo] | 590.8 ns/op |    112 B/op     |    2 allocs/op    |
-| IncSW/go-bencode [Marshal]   | 676.1 ns/op |    624 B/op     |    3 allocs/op    |
+| IncSW/go-bencode [MarshalTo] | 581.0 ns/op |    112 B/op     |    2 allocs/op    |
+| IncSW/go-bencode [Marshal]   | 662.6 ns/op |    624 B/op     |    3 allocs/op    |
 | marksamman/bencode           | 820.3 ns/op |    384 B/op     |    8 allocs/op    |
 | cristalhq/bencode            | 994.2 ns/op |    928 B/op     |    4 allocs/op    |
 | aleksatr/go-bencode          | 1061 ns/op  |    736 B/op     |    9 allocs/op    |

@@ -2,6 +2,7 @@ package encoder
 
 import "github.com/IncSW/go-bencode/internal"
 
+//go:nosplit
 func (e *Encoder) encodeDictionary(data map[string]interface{}) error {
 	e.grow(1)
 	e.writeByte('d')
