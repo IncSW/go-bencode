@@ -44,24 +44,22 @@ func init() {
 	}
 }
 
-func writeInt(value int64, result *[]byte, offset int, length int) (int, int) {
-	u64 := uint64(value)
+func (e *Encoder) writeInt(data int64) {
+	u64 := uint64(data)
 	n := u64 & intMask
-	negative := value < 0
+	negative := data < 0
 	if !negative {
 		if n < 10 {
-			length = prepareBuffer(result, offset, length, 1)
-			(*result)[offset] = byte(n + '0')
-			offset++
-			return offset, length
+			e.writeByte(byte(n + '0'))
+			return
 		} else if n < 100 {
-			u := intLELookup[n]
-			length = prepareBuffer(result, offset, length, 2)
-			(*result)[offset] = byte(u)
-			offset++
-			(*result)[offset] = byte(u >> 8)
-			offset++
-			return offset, length
+			memmove(
+				unsafe.Pointer(uintptr((*sliceHeader)(unsafe.Pointer(&e.buffer)).data)+uintptr(e.offset)),
+				unsafe.Pointer(&intLELookup[n]),
+				2,
+			)
+			e.offset += 2
+			return
 		}
 	} else {
 		n = -n & intMask
@@ -85,21 +83,12 @@ func writeInt(value int64, result *[]byte, offset int, length int) (int, int) {
 		i--
 		b[i] = '-'
 	}
-	length = prepareBuffer(result, offset, length, 22)
-	for _, bt := range b[i:] {
-		(*result)[offset] = bt
-		offset++
-	}
-	return offset, length
+	e.write(b[i:])
 }
 
-func marshalInt(data int64, result *[]byte, offset int, length int) (int, int) {
-	length = prepareBuffer(result, offset, length, 1)
-	(*result)[offset] = 'i'
-	offset++
-	offset, length = writeInt(data, result, offset, length)
-	length = prepareBuffer(result, offset, length, 1)
-	(*result)[offset] = 'e'
-	offset++
-	return offset, length
+func (e *Encoder) encodeInt(data int64) {
+	e.grow(24)
+	e.writeByte('i')
+	e.writeInt(data)
+	e.writeByte('e')
 }

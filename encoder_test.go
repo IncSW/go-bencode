@@ -1,6 +1,7 @@
 package bencode
 
 import (
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -82,7 +83,16 @@ func TestMarshalUnOrderedDict(t *testing.T) {
 
 func BenchmarkMarshal(b *testing.B) {
 	b.ReportAllocs()
-	for n := 0; n < b.N; n++ {
-		Marshal(marshalTestData)
-	}
+	var result []byte
+	b.Run("Marshal", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			result, _ = Marshal(marshalTestData)
+		}
+	})
+	b.Run("MarshalTo", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			result, _ = MarshalTo(result, marshalTestData)
+		}
+	})
+	runtime.KeepAlive(result)
 }

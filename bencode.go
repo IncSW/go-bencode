@@ -6,11 +6,13 @@ import (
 )
 
 func MarshalTo(dst []byte, data interface{}) ([]byte, error) {
-	return encoder.MarshalTo(dst, data)
+	var e encoder.Encoder
+	return e.EncodeTo(dst, data)
 }
 
 func Marshal(data interface{}) ([]byte, error) {
-	return encoder.MarshalTo(make([]byte, 512), data)
+	var e encoder.Encoder
+	return e.EncodeTo(nil, data)
 }
 
 func Unmarshal(data []byte) (interface{}, error) {

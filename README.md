@@ -41,15 +41,16 @@ data, err := bencode.Unmarshal(value)
 
 ### Marshal
 
-| Library             |    Time     | Bytes Allocated | Objects Allocated |
-| :------------------ | :---------: | :-------------: | :---------------: |
-| IncSW/go-bencode    | 614.4 ns/op |    112 B/op     |    2 allocs/op    |
-| marksamman/bencode  | 820.3 ns/op |    384 B/op     |    8 allocs/op    |
-| cristalhq/bencode   | 994.2 ns/op |    928 B/op     |    4 allocs/op    |
-| aleksatr/go-bencode | 1061 ns/op  |    736 B/op     |    9 allocs/op    |
-| nabilanam/bencode   | 2103 ns/op  |    1192 B/op    |   44 allocs/op    |
-| jackpal/bencode-go  | 4676 ns/op  |    2016 B/op    |   45 allocs/op    |
-| zeebo/bencode       | 4889 ns/op  |    1376 B/op    |   33 allocs/op    |
+| Library                      |    Time     | Bytes Allocated | Objects Allocated |
+| :--------------------------- | :---------: | :-------------: | :---------------: |
+| IncSW/go-bencode [MarshalTo] | 590.8 ns/op |    112 B/op     |    2 allocs/op    |
+| IncSW/go-bencode [Marshal]   | 676.1 ns/op |    624 B/op     |    3 allocs/op    |
+| marksamman/bencode           | 820.3 ns/op |    384 B/op     |    8 allocs/op    |
+| cristalhq/bencode            | 994.2 ns/op |    928 B/op     |    4 allocs/op    |
+| aleksatr/go-bencode          | 1061 ns/op  |    736 B/op     |    9 allocs/op    |
+| nabilanam/bencode            | 2103 ns/op  |    1192 B/op    |   44 allocs/op    |
+| jackpal/bencode-go           | 4676 ns/op  |    2016 B/op    |   45 allocs/op    |
+| zeebo/bencode                | 4889 ns/op  |    1376 B/op    |   33 allocs/op    |
 
 ### Unmarshal
 

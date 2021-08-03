@@ -2,162 +2,118 @@ package encoder
 
 import (
 	"fmt"
+	"unsafe"
 
 	"github.com/IncSW/go-bencode/internal"
 )
 
-func prepareBuffer(result *[]byte, offset int, length int, neededLength int) int {
-	availableLength := length - offset
-	if availableLength >= neededLength {
-		return length
-	}
+//go:linkname memmove runtime.memmove
+//go:noescape
+func memmove(to unsafe.Pointer, from unsafe.Pointer, n uintptr)
 
-	rate := 1
-	for availableLength < neededLength {
-		rate++
-		availableLength = length*rate - offset
-	}
-
-	newResult := make([]byte, length*rate)
-	copy(newResult, (*result)[:length])
-	length *= rate
-	*result = newResult
-
-	return length
+type sliceHeader struct {
+	data unsafe.Pointer
+	len  int
+	cap  int
 }
 
-func MarshalTo(dst []byte, data interface{}) ([]byte, error) {
+type Encoder struct {
+	buffer []byte
+	length int
+	offset int
+}
+
+//go:nosplit
+func (e *Encoder) grow(neededLength int) {
+	availableLength := e.length - e.offset
+	if availableLength >= neededLength {
+		return
+	}
+	if e.length == 0 {
+		if neededLength < 16 {
+			neededLength = 16
+		}
+		e.length = neededLength
+		availableLength = neededLength
+	} else {
+		for availableLength < neededLength {
+			e.length += e.length
+			availableLength = e.length - e.offset
+		}
+	}
+	buffer := make([]byte, e.length)
+	memmove(
+		unsafe.Pointer(uintptr((*sliceHeader)(unsafe.Pointer(&buffer)).data)),
+		(*sliceHeader)(unsafe.Pointer(&e.buffer)).data,
+		uintptr(e.offset),
+	)
+	e.buffer = buffer
+}
+
+//go:nosplit
+func (e *Encoder) write(data []byte) {
+	length := len(data)
+	memmove(
+		unsafe.Pointer(uintptr((*sliceHeader)(unsafe.Pointer(&e.buffer)).data)+uintptr(e.offset)),
+		(*sliceHeader)(unsafe.Pointer(&data)).data,
+		uintptr(length),
+	)
+	e.offset += length
+}
+
+//go:nosplit
+func (e *Encoder) writeByte(data byte) {
+	*(*byte)(unsafe.Pointer(uintptr((*sliceHeader)(unsafe.Pointer(&e.buffer)).data) + uintptr(e.offset))) = data
+	e.offset++
+}
+
+func (e *Encoder) EncodeTo(dst []byte, data interface{}) ([]byte, error) {
 	if cap(dst) > len(dst) {
 		dst = dst[:cap(dst)]
 	} else if len(dst) == 0 {
 		dst = make([]byte, 512)
 	}
-	length, _, err := marshal(data, &dst, 0, len(dst))
+	e.buffer = dst
+	e.length = cap(dst)
+	err := e.encode(data)
 	if err != nil {
 		return nil, err
 	}
-	return dst[:length], nil
+	return e.buffer[:e.offset], nil
 }
 
-func marshal(data interface{}, result *[]byte, offset int, length int) (int, int, error) {
+func (e *Encoder) encode(data interface{}) error {
 	switch value := data.(type) {
 	case int64:
-		offset, length = marshalInt(value, result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(value)
 	case int32:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case int16:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case int8:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case int:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case uint64:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case uint32:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case uint16:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case uint8:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case uint:
-		offset, length = marshalInt(int64(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeInt(int64(value))
 	case []byte:
-		offset, length = marshalBytes(value, result, offset, length)
-		return offset, length, nil
-
+		e.encodeBytes(value)
 	case string:
-		offset, length = marshalBytes(internal.S2B(value), result, offset, length)
-		return offset, length, nil
-
+		e.encodeBytes(internal.S2B(value))
 	case []interface{}:
-		return marshalList(value, result, offset, length)
-
+		return e.encodeList(value)
 	case map[string]interface{}:
-		return marshalDictionary(value, result, offset, length)
-
+		return e.encodeDictionary(value)
 	default:
-		return 0, 0, fmt.Errorf("bencode: unsupported type: %T", value)
+		return fmt.Errorf("bencode: unsupported type: %T", value)
 	}
-}
-
-func marshalBytes(data []byte, result *[]byte, offset int, length int) (int, int) {
-	dataLength := len(data)
-	offset, length = writeInt(int64(dataLength), result, offset, length)
-	length = prepareBuffer(result, offset, length, dataLength+1)
-	(*result)[offset] = ':'
-	offset++
-	copy((*result)[offset:], data)
-	offset += dataLength
-	return offset, length
-}
-
-func marshalList(data []interface{}, result *[]byte, offset int, length int) (int, int, error) {
-	length = prepareBuffer(result, offset, length, 1)
-
-	(*result)[offset] = 'l'
-	offset++
-
-	for _, data := range data {
-		var err error
-		offset, length, err = marshal(data, result, offset, length)
-		if err != nil {
-			return 0, 0, err
-		}
-	}
-
-	length = prepareBuffer(result, offset, length, 1)
-
-	(*result)[offset] = 'e'
-	offset++
-
-	return offset, length, nil
-}
-
-func marshalDictionary(data map[string]interface{}, result *[]byte, offset int, length int) (int, int, error) {
-	length = prepareBuffer(result, offset, length, 1)
-
-	(*result)[offset] = 'd'
-	offset++
-
-	keys := make([]string, 0, len(data))
-	for key, _ := range data {
-		keys = append(keys, key)
-	}
-	internal.SortStrings(keys)
-
-	for _, key := range keys {
-		offset, length = marshalBytes(internal.S2B(key), result, offset, length)
-		var err error
-		offset, length, err = marshal(data[key], result, offset, length)
-		if err != nil {
-			return 0, 0, err
-		}
-	}
-
-	length = prepareBuffer(result, offset, length, 1)
-
-	(*result)[offset] = 'e'
-	offset++
-
-	return offset, length, nil
+	return nil
 }
