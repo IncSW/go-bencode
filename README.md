@@ -43,7 +43,7 @@ data, err := bencode.Unmarshal(value)
 
 | Library             |    Time     | Bytes Allocated | Objects Allocated | Notes |
 | :------------------ | :---------: | :-------------: | :---------------: | :---: |
-| IncSW/go-bencode    | 662.6 ns/op |    624 B/op     |    3 allocs/op    |       |
+| IncSW/go-bencode    | 598.5 ns/op |    512 B/op     |    1 allocs/op    |       |
 | cristalhq/bencode   | 939.4 ns/op |    928 B/op     |    4 allocs/op    |       |
 | marksamman/bencode  | 1002 ns/op  |    736 B/op     |    9 allocs/op    |   4   |
 | aleksatr/go-bencode | 1060 ns/op  |    736 B/op     |    9 allocs/op    |       |
@@ -64,7 +64,7 @@ data, err := bencode.Unmarshal(value)
 
 | Library            |    Time     | Bytes Allocated | Objects Allocated | Notes |
 | :----------------- | :---------: | :-------------: | :---------------: | :---: |
-| IncSW/go-bencode   | 581.0 ns/op |    112 B/op     |    2 allocs/op    |       |
+| IncSW/go-bencode   | 503.0 ns/op |     0 B/op      |    0 allocs/op    |       |
 | cristalhq/bencode  | 668.4 ns/op |     0 B/op      |    0 allocs/op    |       |
 | chihaya/chihaya    | 1432 ns/op  |    307 B/op     |   49 allocs/op    |   1   |
 | lajide/bencode     | 1462 ns/op  |    307 B/op     |   49 allocs/op    |   1   |
@@ -100,9 +100,9 @@ data, err := bencode.Unmarshal(value)
 
 | Library                       |    Time     | Bytes Allocated | Objects Allocated |
 | :---------------------------- | :---------: | :-------------: | :---------------: |
-| IncSW/go-bencode Unmarshal    | 1271 ns/op  |    1016 B/op    |   21 allocs/op    |
-| IncSW/go-bencode Marshal      | 27929 ns/op |   262816 B/op   |    4 allocs/op    |
-| IncSW/go-bencode MarshalTo    | 7937 ns/op  |    160 B/op     |    2 allocs/op    |
+| IncSW/go-bencode Unmarshal    | 1269 ns/op  |    1016 B/op    |   21 allocs/op    |
+| IncSW/go-bencode Marshal      | 27929 ns/op |   262816 B/op   |    2 allocs/op    |
+| IncSW/go-bencode MarshalTo    | 7851 ns/op  |     0 B/op      |    0 allocs/op    |
 |                               |
 |                               |
 | cristalhq/bencode Unmarshal   | 1552 ns/op  |    1016 B/op    |   21 allocs/op    |
