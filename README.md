@@ -100,14 +100,14 @@ data, err := bencode.Unmarshal(value)
 
 | Library                       |    Time     | Bytes Allocated | Objects Allocated |
 | :---------------------------- | :---------: | :-------------: | :---------------: |
-| IncSW/go-bencode Unmarshal    | 1279 ns/op  |    1016 B/op    |   21 allocs/op    |
-| IncSW/go-bencode Marshal      | 28572 ns/op |   262816 B/op   |    4 allocs/op    |
-| IncSW/go-bencode MarshalTo    | 7800 ns/op  |    160 B/op     |    2 allocs/op    |
+| IncSW/go-bencode Unmarshal    | 1271 ns/op  |    1016 B/op    |   21 allocs/op    |
+| IncSW/go-bencode Marshal      | 27929 ns/op |   262816 B/op   |    4 allocs/op    |
+| IncSW/go-bencode MarshalTo    | 7937 ns/op  |    160 B/op     |    2 allocs/op    |
 |                               |
 |                               |
-| cristalhq/bencode Unmarshal   | 1560 ns/op  |    1016 B/op    |   21 allocs/op    |
+| cristalhq/bencode Unmarshal   | 1552 ns/op  |    1016 B/op    |   21 allocs/op    |
 | cristalhq/bencode Marshal     | 49125 ns/op |   443168 B/op   |    5 allocs/op    |
-| cristalhq/bencode MarshalTo   | 7709 ns/op  |     0 B/op      |    0 allocs/op    |
+| cristalhq/bencode MarshalTo   | 8183 ns/op  |     0 B/op      |    0 allocs/op    |
 |                               |
 |                               |
 | aleksatr/go-bencode Unmarshal | 21615 ns/op |   223352 B/op   |   69 allocs/op    |
@@ -117,7 +117,6 @@ data, err := bencode.Unmarshal(value)
 | jackpal/bencode-go Unmarshal  | 48384 ns/op |   444484 B/op   |   81 allocs/op    |
 | jackpal/bencode-go Marshal    | 55097 ns/op |   445694 B/op   |   60 allocs/op    |
 | jackpal/bencode-go MarshalTo  | 35800 ns/op |   223128 B/op   |   54 allocs/op    |
-
 
 #### Notes
 
