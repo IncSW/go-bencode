@@ -67,7 +67,6 @@ func (e *Encoder) writeByte(data byte) {
 	e.offset++
 }
 
-//go:nosplit
 func (e *Encoder) EncodeTo(dst []byte, data interface{}) ([]byte, error) {
 	if cap(dst) > len(dst) {
 		dst = dst[:cap(dst)]
@@ -83,7 +82,6 @@ func (e *Encoder) EncodeTo(dst []byte, data interface{}) ([]byte, error) {
 	return e.buffer[:e.offset], nil
 }
 
-//go:nosplit
 func (e *Encoder) encode(data interface{}) error {
 	switch value := data.(type) {
 	case int64:
